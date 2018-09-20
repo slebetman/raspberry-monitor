@@ -3,6 +3,12 @@
 var raspInfo = require('raspberry-info');
 var asyncq = require('async-q');
 var clearScreen = require('cross-clear');
+var isRoot = require('is-root');
+
+if (!isRoot()) {
+	console.log('Please sudo me!');
+	process.exit();
+}
 
 var barChars = ' ▏▎▍▌▋▊▉█'.split('');
 
@@ -20,10 +26,10 @@ function drawBar(fraction, width) {
 			barChars.slice(-1)[0].repeat(chars) + 
 			barChars[detail] + 
 			' '.repeat(remainder) +
-		']';
+		']  ';
 	}
 	else {
-		return '[' + barChars.slice(-1)[0].repeat(width) + ']';
+		return '[' + barChars.slice(-1)[0].repeat(width) + ']  ';
 	}
 }
 
@@ -37,19 +43,33 @@ setInterval(function(){
 	asyncq.parallel({
 		cpuTemp: raspInfo.getCPUTemperature,
 		gpuTemp: raspInfo.getGPUTemperature,
-		memTotal: raspInfo.getMemoryTotal,
+		memFree: raspInfo.getMemoryFree,
 		memAvailable: raspInfo.getMemoryAvailable,
-		memUsage: raspInfo.getMemoryUsage
+		memTotal: raspInfo.getMemoryTotal
 	})
 	.then(info => {
 		cpuT = parseFloat(info.cpuTemp);
 		gpuT = parseFloat(info.gpuTemp);
-		mU = parseFloat(info.memUsage);
+		mF = parseFloat(info.memFree)/1024;
+		mA = parseFloat(info.memAvailable)/1024;
+		mT = parseFloat(info.memTotal)/1024;
+		mU = (mT-mA)/mT;
 	
 		clearScreen();
-		console.log(`CPU Temp = ${pad(info.cpuTemp,8)}` + drawBar(cpuT/80,15));
-		console.log(`GPU Temp = ${pad(info.gpuTemp,8)}` + drawBar(gpuT/80,15));
-		console.log(`Mem Use  = ${pad(info.memUsage,8)}` + drawBar(mU/100,15));
+		console.log(
+			`CPU Temp = ${pad(info.cpuTemp,8)}` + 
+			drawBar(cpuT/80,10),
+			new Date().toLocaleString()
+		);
+		console.log(
+			`GPU Temp = ${pad(info.gpuTemp,8)}` + 
+			drawBar(gpuT/80,10)
+		);
+		console.log(
+			`Mem Use  = ${pad((mU*100).toFixed(1) + '%',8)}` + 
+			drawBar(mU,10) +
+			`(${pad(mF.toFixed(1),5)} MB free, ${pad(mA.toFixed(1),5)} MB available)`
+		);
 	});
 },1000);
 
