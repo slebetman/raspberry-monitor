@@ -1,0 +1,26 @@
+#! /usr/bin/env node
+
+var barChars = ' ▏▎▍▌▋▊▉█'.split('');
+
+function drawBar(fraction, width) {
+	var totalPx = width * barChars.length;
+	var px = Math.round(fraction * totalPx);
+	var chars = Math.floor(px/barChars.length);
+	var detail = px%barChars.length;
+	var remainder = width-chars-1;
+	
+	if (fraction < 1 && remainder >= 0) {
+		return '[' + 
+			barChars.slice(-1)[0].repeat(chars) + 
+			barChars[detail] + 
+			' '.repeat(remainder) +
+		']';
+	}
+	else {
+		return '[' + barChars.slice(-1)[0].repeat(width) + ']';
+	}
+}
+
+
+
+
