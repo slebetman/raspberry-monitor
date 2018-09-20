@@ -1,8 +1,14 @@
 #! /usr/bin/env node
 
+var raspInfo = require('raspberry-info');
+var asyncq = require('async-q');
+var clearScreen = require('cross-clear');
+
 var barChars = ' ▏▎▍▌▋▊▉█'.split('');
 
 function drawBar(fraction, width) {
+	if (fraction > 1) fraction = 1;
+	
 	var totalPx = width * barChars.length;
 	var px = Math.round(fraction * totalPx);
 	var chars = Math.floor(px/barChars.length);
@@ -21,6 +27,29 @@ function drawBar(fraction, width) {
 	}
 }
 
+function pad (txt, width) {
+	txt = txt.replace(/\r|\n/g,'');
+	if (width < txt.length) return txt;
+	return txt + ' '.repeat(width - txt.length);
+}
 
-
+setInterval(function(){
+	asyncq.parallel({
+		cpuTemp: raspInfo.getCPUTemperature,
+		gpuTemp: raspInfo.getGPUTemperature,
+		memTotal: raspInfo.getMemoryTotal,
+		memAvailable: raspInfo.getMemoryAvailable,
+		memUsage: raspInfo.getMemoryUsage
+	})
+	.then(info => {
+		cpuT = parseFloat(info.cpuTemp);
+		gpuT = parseFloat(info.gpuTemp);
+		mU = parseFloat(info.memUsage);
+	
+		clearScreen();
+		console.log(`CPU Temp = ${pad(info.cpuTemp,8)}` + drawBar(cpuT/80,15));
+		console.log(`GPU Temp = ${pad(info.gpuTemp,8)}` + drawBar(gpuT/80,15));
+		console.log(`Mem Use  = ${pad(info.memUsage,8)}` + drawBar(mU/100,15));
+	});
+},1000);
 
