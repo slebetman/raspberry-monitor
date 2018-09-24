@@ -51,7 +51,7 @@ setInterval(function(){
 	})
 	.then(info => {
 		var BAR_LENGTH = 10;
-		var OFFSET_TEMP = 20; // use approx room temp as baseline instead of zero
+		var OFFSET_TEMP = 25; // use approx room temp as baseline instead of zero
 		var cpuT = parseFloat(info.cpuTemp);
 		var gpuT = parseFloat(info.gpuTemp);
 		var mF = parseFloat(info.memFree)/1024;
