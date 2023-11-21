@@ -1,10 +1,12 @@
 #! /usr/bin/env node
 
-var raspInfo = require('raspberry-info');
-var asyncq = require('async-q');
-var clearScreen = require('cross-clear');
-var isRoot = require('is-root');
-var cpuInfo = require('./lib/cpu');
+const raspInfo = require('raspberry-info');
+const asyncq = require('async-q');
+const clearScreen = require('cross-clear');
+const isRoot = require('is-root');
+const cpuInfo = require('./lib/cpu');
+const { measureCPU, measureGPU } = require('rpi_measure_temp');
+
 
 if (!isRoot()) {
 	console.log('Please sudo me!');
@@ -40,10 +42,18 @@ function pad (txt, width) {
 	return txt + ' '.repeat(width - txt.length);
 }
 
+async function getCPUTemperature () {
+	return (await measureCPU()).celsius;
+}
+
+async function getGPUTemperature () {
+	return (await measureGPU()).celsius;
+}
+
 setInterval(function(){
 	asyncq.parallel({
-		cpuTemp: raspInfo.getCPUTemperature,
-		gpuTemp: raspInfo.getGPUTemperature,
+		cpuTemp: getCPUTemperature,
+		gpuTemp: getGPUTemperature,
 		memFree: raspInfo.getMemoryFree,
 		memAvailable: raspInfo.getMemoryAvailable,
 		memTotal: raspInfo.getMemoryTotal,
@@ -52,8 +62,8 @@ setInterval(function(){
 	.then(info => {
 		var BAR_LENGTH = 10;
 		var OFFSET_TEMP = 20; // use approx room temp as baseline instead of zero
-		var cpuT = parseFloat(info.cpuTemp);
-		var gpuT = parseFloat(info.gpuTemp);
+		var cpuT = info.cpuTemp;
+		var gpuT = info.gpuTemp;
 		var mF = parseFloat(info.memFree)/1024;
 		var mA = parseFloat(info.memAvailable)/1024;
 		var mT = parseFloat(info.memTotal)/1024;
@@ -62,13 +72,13 @@ setInterval(function(){
 		clearScreen();
 		console.log(new Date().toLocaleString());
 		console.log(
-			`CPU Temp = ${pad(info.cpuTemp,8)}` + 
+			`CPU Temp = ${pad(info.cpuTemp.toString(),8)}` + 
 			drawBar((cpuT-OFFSET_TEMP)/(80-OFFSET_TEMP),BAR_LENGTH) + 
 			`Mem Use  = ${pad((mU*100).toFixed(1) + '%',8)}` + 
 			drawBar(mU,BAR_LENGTH) 
 		);
 		console.log(
-			`GPU Temp = ${pad(info.gpuTemp,8)}` + 
+			`GPU Temp = ${pad(info.gpuTemp.toString(),8)}` + 
 			drawBar((gpuT-OFFSET_TEMP)/(80-OFFSET_TEMP),BAR_LENGTH) +
 			`CPU Use  = ${pad(info.cpu.percentUsed.toFixed(1) + '%',8)}` + 
 			drawBar(info.cpu.percentUsed/100,BAR_LENGTH)
