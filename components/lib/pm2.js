@@ -94,9 +94,9 @@ const get = component.get('/pm2', async ({}) => {
 	<table class='pm2'>
 		<tr>
 			<th>Process</th>
-			<th class="detail">Last startup time</th>
+			<th>Last startup time</th>
 			<th class="detail">Mode</th>
-			<th class="detail">Instances</th>
+			<th>Instances</th>
 			<th>CPU</th>
 			<th>RAM</th>
 			<th>Status</th>
@@ -105,12 +105,13 @@ const get = component.get('/pm2', async ({}) => {
 		$${Object.values(processes).map(ps => html`
 			<tr>
 				<td>${ps.name}</td>
-				<td class="detail">${new Date(ps.uptime).toLocaleString()}</td>
-				<td class="detail">${ps.mode}</td>
-				<td class="detail">${ps.count}</td>
-				<td>${ps.monit.cpu.toFixed(1)}%</td>
-				<td>${bytes(ps.monit.memory)}</td>
+				<td><span class="label">Start:</span>${new Date(ps.uptime).toLocaleString()}</td>
+				<td class="detail"><span class="label">Mode:</span>${ps.mode}</td>
+				<td><span class="label">Inst:</span>${ps.count}</td>
+				<td><span class="label">CPU:</span>${ps.monit.cpu.toFixed(1)}%</td>
+				<td><span class="label">RAM:</span>${bytes(ps.monit.memory)}</td>
 				<td>
+					<span class="label">Status:</span>
 					<span class='status ${ps.status}'>
 						${ps.status}
 					</span>
@@ -184,26 +185,43 @@ const style = css`
 	.pm2 button {
 		font-size: 16px;
 	}
+	.pm2 span.label {
+		display: none;
+	}
 
 	@media (max-device-width: 1024px) {
-		.pm2 th, .pm2 td {
-			padding: 4px 6px;
-			font-size: 12px;
-		}
-
-		.pm2 button {
-			font-size: 12px;
+		.pm2 {
 			width: 100%;
-			margin-bottom: 2px;
 		}
-
+		.pm2 th {
+			display: none;
+		}
+		.pm2 td {
+			vertical-align: top;
+			padding: 1px;
+			border: none;
+		}
+		.pm2 td:first-child {
+			padding: 1px 10px;
+		}
+		.pm2 span.label {
+			display: inline-block;
+			min-width: 60px;
+		}
+		.pm2 td + td {
+			display: block;
+		}
+		.pm2 td:last-child {
+			padding-bottom: 20px;
+		}
+		.pm2 .detail {
+			display: none;
+		}
 		.pm2 button:last-child {
 			margin-bottom: 0;
 		}
 
-		.pm2 .detail {
-			display: none;
-		}
+		
 	}
 `;
 

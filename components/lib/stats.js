@@ -61,9 +61,6 @@ const style = css`
 			flex-direction: column;
 			gap: 0;
 		}
-		.section div div {
-			font-size: 12px;
-		}
 	}
 `
 

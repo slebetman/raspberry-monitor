@@ -47,7 +47,6 @@ const style = css`
 		font-family:Arial, Helvetica, sans-serif;
 	}
 	.logs pre {
-		border: 1px solid #ccc;
 		width: 100%;
 		padding: 5px 10px;
 		text-wrap: wrap;
