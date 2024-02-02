@@ -2,11 +2,19 @@ const component = require('express-htmx-components');
 const { html, css } = require('express-htmx-components/tags');
 const login = require('./lib/login');
 const temperature = require('./lib/temperature');
+const cpuUsage = require('./lib/cpu');
+const memUsage = require('./lib/mem');
 
 async function systemMonitor () {
 	return html`
-	<div hx-get="/temperature" hx-trigger="every 1567ms">
+	<div hx-get="/temperature" hx-trigger="every 1523ms">
 		$${await temperature.get.html({})}
+	</div>
+	<div hx-get="/cpu" hx-trigger="every 2111ms">
+		$${await cpuUsage.get.html({})}
+	</div>
+	<div hx-get="/mem" hx-trigger="every 1999ms">
+		$${await memUsage.get.html({})}
 	</div>
 	`;
 }

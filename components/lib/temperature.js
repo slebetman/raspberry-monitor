@@ -16,8 +16,6 @@ async function getGPUTemperature () {
 }
 
 function tempBar (temp) {
-	const width = 200;
-
 	let color = '#0c6';
 
 	if (temp >= 65) {
@@ -44,13 +42,13 @@ const get = component.get('/temperature', async ({}) => {
 	return html`
 	<style>${style}</style>
 	<div class='temperature'>
-		<div class='bar-label'>
+		<div class='temp-label'>
 			CPU Temperature: ${temp.cpu}
 		</div>
 		$${tempBar(temp.cpu)}
 	</div>
 	<div class='temperature'>
-		<div class='bar-label'>
+		<div class='temp-label'>
 			GPU Temperature: ${temp.gpu}
 		</div>
 		$${tempBar(temp.gpu)}
@@ -62,7 +60,7 @@ const style = css`
 	.temperature {
 		padding: 5px;
 	}
-	.bar-label {
+	.temp-label {
 		display: inline-block;
 		width: 170px;
 	}

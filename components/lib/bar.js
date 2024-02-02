@@ -13,7 +13,7 @@ const get = component.get('/bar', ({ value, offset, max, color }) => {
 	const width = 200;
 
 	if (!offset) offset = 0;
-
+	if (!max) max = 100;
 	if (!color) color = '#33a';
 
 	return html`
