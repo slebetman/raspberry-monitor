@@ -8,6 +8,7 @@ const compress = require('express-compress').compress;
 const components = require('express-htmx-components');
 const requestLogger = require('./lib/request-logger');
 const conf = require('./lib/config');
+const loginMiddleware = require('./lib/loginMiddleware');
 
 const app = express();
 
@@ -38,6 +39,8 @@ app.use(compress({ contentType: /html|js|css/ }));
 if (process.env.DEV) {
 	app.use(requestLogger);
 }
+
+app.use(loginMiddleware);
 
 components.init(app, COMPONENTS_DIR, {
 	css : [
