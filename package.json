@@ -11,7 +11,6 @@
   "dependencies": {
     "async-q": "^0.3.1",
     "cross-clear": "^1.0.0",
-    "is-root": "^2.0.0",
     "raspberry-info": "^1.0.4",
     "rpi_measure_temp": "^1.0.0"
   }

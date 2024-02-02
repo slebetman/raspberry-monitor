@@ -3,15 +3,9 @@
 const raspInfo = require('raspberry-info');
 const asyncq = require('async-q');
 const clearScreen = require('cross-clear');
-const isRoot = require('is-root');
 const cpuInfo = require('./lib/cpu');
 const { measureCPU, measureGPU } = require('rpi_measure_temp');
 
-
-if (!isRoot()) {
-	console.log('Please sudo me!');
-	process.exit();
-}
 
 var barChars = ' ▏▎▍▌▋▊▉█'.split('');
 
@@ -73,13 +67,13 @@ setInterval(function(){
 		console.log(new Date().toLocaleString());
 		console.log(
 			`CPU Temp = ${pad(info.cpuTemp.toString(),8)}` + 
-			drawBar((cpuT-OFFSET_TEMP)/(80-OFFSET_TEMP),BAR_LENGTH) + 
+			drawBar((cpuT-OFFSET_TEMP)/(90-OFFSET_TEMP),BAR_LENGTH) + 
 			`Mem Use  = ${pad((mU*100).toFixed(1) + '%',8)}` + 
 			drawBar(mU,BAR_LENGTH) 
 		);
 		console.log(
 			`GPU Temp = ${pad(info.gpuTemp.toString(),8)}` + 
-			drawBar((gpuT-OFFSET_TEMP)/(80-OFFSET_TEMP),BAR_LENGTH) +
+			drawBar((gpuT-OFFSET_TEMP)/(90-OFFSET_TEMP),BAR_LENGTH) +
 			`CPU Use  = ${pad(info.cpu.percentUsed.toFixed(1) + '%',8)}` + 
 			drawBar(info.cpu.percentUsed/100,BAR_LENGTH)
 		);
