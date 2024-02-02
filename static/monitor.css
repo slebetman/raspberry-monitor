@@ -6,13 +6,6 @@ li {
 	margin-bottom: 0.5em;
 }
 
-pre code {
-	padding: 10px;
-	display: block;
-	background-color: #eee;
-	overflow: auto;
-}
-
 table {
 	border-collapse: collapse;
 }
@@ -87,24 +80,5 @@ div.htmx-request .content,
 
 	#content {
 		margin: 10px 20px;
-	}
-
-	#note-list .stickies h3 {
-		font-size: medium;
-	}
-
-	#note-list .stickies {
-		width: 140px;
-		height: 140px;
-	}
-
-	#note-list .stickies .body {
-		width: 140px;
-		height: 140px;
-	}
-
-	#note-list .stickies .body .content {
-		width: 120px;
-		font-size: 9pt;
 	}
 }

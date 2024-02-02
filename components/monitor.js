@@ -36,7 +36,7 @@ const main = component.get('/', async ({ session }, hx) => {
 	</div>
 
 	<div id="content">
-		$${user ? await stats.get.html({}) : login.get.html({ session })}
+		$${await stats.get.html({})}
 	</div>
 	`;
 });

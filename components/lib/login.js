@@ -9,6 +9,7 @@ const LOGIN_PADDING = 20;
 
 function form ({ error }) {
 	return html`
+	<meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1" />
 	<div id="login" hx-ext="remove-me">
 		<script src="https://unpkg.com/htmx.org/dist/ext/remove-me.js"></script>
 		<style>${style}</style>
@@ -94,6 +95,7 @@ const style = css`
 
 	@media (max-device-width: 1024px) {
 		#login {
+			margin: 25vh auto;
 			padding: 40px ${LOGIN_PADDING}px;
 			width: ${MOBILE_LOGIN_WIDTH}px;
 		}
@@ -103,8 +105,9 @@ const style = css`
 		}
 	
 		#login .row label {
-			display: inline-block;
+			display: block;
 			width: 100%;
+			padding-bottom: 4px;
 		}
 	
 		#login .row input {
