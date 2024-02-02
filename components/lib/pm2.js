@@ -188,11 +188,11 @@ const style = css`
 	@media (max-device-width: 1024px) {
 		.pm2 th, .pm2 td {
 			padding: 4px 6px;
-			font-size: 14px;
+			font-size: 12px;
 		}
 
 		.pm2 button {
-			font-size: 14px;
+			font-size: 12px;
 			width: 100%;
 			margin-bottom: 2px;
 		}
