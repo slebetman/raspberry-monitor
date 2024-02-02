@@ -21,7 +21,7 @@ const get = component.get('/bar', ({ value, offset, max, color }) => {
 			width:${width}px;
 			display: inline-block;
 			height: 18px;
-			vertical-align: top;
+			vertical-align: middle;
 			padding: 1px;
 			border: 1px solid #999;
 			background: #fff;

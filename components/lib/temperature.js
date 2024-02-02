@@ -43,13 +43,13 @@ const get = component.get('/temperature', async ({}) => {
 	<style>${style}</style>
 	<div class='temperature'>
 		<div class='temp-label'>
-			CPU Temperature: ${temp.cpu}
+			CPU Temperature: ${temp.cpu}°
 		</div>
 		$${tempBar(temp.cpu)}
 	</div>
 	<div class='temperature'>
 		<div class='temp-label'>
-			GPU Temperature: ${temp.gpu}
+			GPU Temperature: ${temp.gpu}°
 		</div>
 		$${tempBar(temp.gpu)}
 	</div>
@@ -62,7 +62,7 @@ const style = css`
 	}
 	.temp-label {
 		display: inline-block;
-		width: 170px;
+		width: 200px;
 	}
 `;
 

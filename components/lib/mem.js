@@ -25,10 +25,12 @@ function memBar (val) {
 }
 
 const get = component.get('/mem', async ({}) => {
+	const bytes = (await import('pretty-bytes')).default;
+
 	const mem = await getMemUse();
 
-	var mA = parseFloat(mem.available)/1024;
-	var mT = parseFloat(mem.total)/1024;
+	var mA = parseFloat(mem.available)*1024;
+	var mT = parseFloat(mem.total)*1024;
 	var mU = (mT-mA)/mT;
 
 	return html`
@@ -38,6 +40,15 @@ const get = component.get('/mem', async ({}) => {
 			RAM Usage: ${(mU*100).toFixed(2)}%
 		</div>
 		$${memBar(mU)}
+		<div class="mem-detail">
+		(
+			${bytes(mT-mA,{
+				binary: true
+			})} / ${bytes(mT,{
+				binary: true
+			})}
+		)
+		</div>
 	</div>
 	`;
 })
@@ -49,6 +60,9 @@ const style = css`
 	.mem-label {
 		display: inline-block;
 		width: 170px;
+	}
+	.mem-detail {
+		font-size: 12px;
 	}
 `;
 
