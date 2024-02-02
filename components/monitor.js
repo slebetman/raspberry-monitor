@@ -43,9 +43,9 @@ const main = component.get('/', async ({ session }, hx) => {
 
 
 
-const logout = component.get('/logout', async ({ session }, { redirect }) => {
+const logout = component.get('/logout', async ({ session }, hx) => {
 	delete session.user;
-	await redirect('/');
+	await hx.redirect('/');
 });
 
 const style = css`
