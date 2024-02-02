@@ -136,7 +136,7 @@ const get = component.get('/pm2', async ({}) => {
 			<th>Process</th>
 			<th>Last startup time</th>
 			<th>Mode</th>
-			<th>instances</th>
+			<th>Instances</th>
 			<th>CPU</th>
 			<th>RAM</th>
 			<th>Status</th>
