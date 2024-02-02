@@ -1,7 +1,6 @@
 const component = require('express-htmx-components');
 const { html, css } = require('express-htmx-components/tags');
 const pm2 = require('pm2');
-const { exec } = require('child_process');
 
 function connect () {
 	return new Promise((ok,fail) => {
@@ -39,15 +38,6 @@ function stopProcess (proc) {
 	})
 }
 
-function getLogs (proc) {
-	return new Promise((ok, fail) => {
-		exec(`pm2 logs --nostream "${proc}"`, (err, stdout, stderr) => {
-			if (err) return fail(err);
-			ok(stdout + stderr);
-		})
-	})
-}
-
 const stop = component.post('/pm2/stop/:procName', async ({ procName }) => {
 	await connect();
 
@@ -70,36 +60,6 @@ const start = component.post('/pm2/restart/:procName', async ({ procName }) => {
 	await startProcess(procName);
 
 	return get.html({});
-});
-
-const logs = component.get('/pm2/logs/:procName', async ({ procName }) => {
-	await connect();
-
-	if (!procName) {
-		throw new Error('Invalid process name!');
-	}
-
-	return html`
-	<style>${style}</style>
-	<button
-		hx-get="/stats"
-		hx-target="#content"
-	>
-		<span class="material-icons-outlined">
-			arrow_back
-		</span>
-		Back
-	</button>
-	<h2>
-		<span class="material-icons-outlined">
-			notes
-		</span>
-		${procName} Logs
-	</h2>
-	<div class="pm2">
-		<pre>${await getLogs(procName)}</pre>
-	</div>
-	`
 });
 
 const get = component.get('/pm2', async ({}) => {
@@ -134,9 +94,9 @@ const get = component.get('/pm2', async ({}) => {
 	<table class='pm2'>
 		<tr>
 			<th>Process</th>
-			<th>Last startup time</th>
-			<th>Mode</th>
-			<th>Instances</th>
+			<th class="detail">Last startup time</th>
+			<th class="detail">Mode</th>
+			<th class="detail">Instances</th>
 			<th>CPU</th>
 			<th>RAM</th>
 			<th>Status</th>
@@ -145,9 +105,9 @@ const get = component.get('/pm2', async ({}) => {
 		$${Object.values(processes).map(ps => html`
 			<tr>
 				<td>${ps.name}</td>
-				<td>${new Date(ps.uptime).toLocaleString()}</td>
-				<td>${ps.mode}</td>
-				<td>${ps.count}</td>
+				<td class="detail">${new Date(ps.uptime).toLocaleString()}</td>
+				<td class="detail">${ps.mode}</td>
+				<td class="detail">${ps.count}</td>
 				<td>${ps.monit.cpu.toFixed(1)}%</td>
 				<td>${bytes(ps.monit.memory)}</td>
 				<td>
@@ -201,9 +161,6 @@ const style = css`
 	h2 {
 		text-transform: capitalize;
 	}
-	#pm2-container {
-		flex: 1;
-	}
 	.pm2 {
 		font-family:Arial, Helvetica, sans-serif;
 	}
@@ -227,11 +184,26 @@ const style = css`
 	.pm2 button {
 		font-size: 16px;
 	}
-	.pm2 pre {
-		border: 1px solid #ccc;
-		width: 100%;
-		padding: 5px 10px;
-		text-wrap: wrap;
+
+	@media (max-device-width: 1024px) {
+		.pm2 th, .pm2 td {
+			padding: 4px 6px;
+			font-size: 14px;
+		}
+
+		.pm2 button {
+			font-size: 14px;
+			width: 100%;
+			margin-bottom: 2px;
+		}
+
+		.pm2 button:last-child {
+			margin-bottom: 0;
+		}
+
+		.pm2 .detail {
+			display: none;
+		}
 	}
 `;
 
@@ -239,5 +211,4 @@ module.exports = {
 	get,
 	stop,
 	start,
-	logs,
 }

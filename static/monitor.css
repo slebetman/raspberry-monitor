@@ -63,6 +63,9 @@ div.htmx-request .content,
 	border-color: #333 transparent #333 transparent;
 	animation: spinner 1.2s linear infinite;
 }
+.bar-container {
+	width: 200px;
+}
 @keyframes spinner {
 	0% {
 		transform: rotate(0deg);
@@ -79,6 +82,10 @@ div.htmx-request .content,
 	}
 
 	#content {
-		margin: 10px 20px;
+		margin: 5px 5px;
+	}
+
+	.bar-container {
+		max-width: 30vw;
 	}
 }

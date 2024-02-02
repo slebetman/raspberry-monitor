@@ -64,6 +64,12 @@ const style = css`
 		display: inline-block;
 		width: 200px;
 	}
+
+	@media (max-device-width: 1024px) {
+		.temp-label {
+			width: 50vw;
+		}
+	}
 `;
 
 module.exports = {

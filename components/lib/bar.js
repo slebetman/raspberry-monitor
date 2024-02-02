@@ -1,24 +1,21 @@
 const component = require('express-htmx-components');
 const { html } = require('express-htmx-components/tags');
 
-function barWidth (value, offset, max, fullWidth) {
+function barWidth (value, offset, max) {
 	let fraction = (value-offset)/(max-offset);
 
 	if (fraction > 1) fraction = 1;
 
-	return fullWidth * fraction;
+	return `${100 * fraction}%`;
 }
 
 const get = component.get('/bar', ({ value, offset, max, color }) => {
-	const width = 200;
-
 	if (!offset) offset = 0;
 	if (!max) max = 100;
 	if (!color) color = '#33a';
 
 	return html`
 		<div class='bar-container' style='
-			width:${width}px;
 			display: inline-block;
 			height: 18px;
 			vertical-align: middle;
@@ -27,7 +24,7 @@ const get = component.get('/bar', ({ value, offset, max, color }) => {
 			background: #fff;
 		'>
 			<div class='bar' style='
-				width:${barWidth(value, offset, max, width)}px;
+				width:${barWidth(value, offset, max)};
 				height: 100%;
 				background:${color};
 			'></div>

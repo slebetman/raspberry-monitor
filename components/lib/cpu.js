@@ -33,6 +33,11 @@ const style = css`
 		display: inline-block;
 		width: 170px;
 	}
+	@media (max-device-width: 1024px) {
+		.cpu-label {
+			width: 50vw;
+		}
+	}
 `;
 
 module.exports = {

@@ -51,6 +51,17 @@ const style = css`
 	.section div div {
 		font-family:Arial, Helvetica, sans-serif;
 	}
+
+	#pm2-container {
+		flex: 1;
+	}
+
+	@media (max-device-width: 1024px) {
+		.section {
+			flex-direction: column;
+			gap: 0;
+		}
+	}
 `
 
 module.exports = {
