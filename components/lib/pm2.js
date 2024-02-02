@@ -189,7 +189,7 @@ const style = css`
 		display: none;
 	}
 
-	@media (max-device-width: 1024px) {
+	@media (max-device-width: 920px) {
 		.pm2 {
 			width: 100%;
 		}

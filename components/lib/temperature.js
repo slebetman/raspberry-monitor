@@ -65,7 +65,7 @@ const style = css`
 		width: 200px;
 	}
 
-	@media (max-device-width: 1024px) {
+	@media (max-device-width: 920px) {
 		.temp-label {
 			width: 50vw;
 		}

@@ -56,7 +56,7 @@ const style = css`
 		flex: 1;
 	}
 
-	@media (max-device-width: 1024px) {
+	@media (max-device-width: 920px) {
 		.section {
 			flex-direction: column;
 			gap: 0;

@@ -93,7 +93,7 @@ const style = css`
 		animation: fadeOut 0.8s ease-out 3.3s;
 	}
 
-	@media (max-device-width: 1024px) {
+	@media (max-device-width: 920px) {
 		#login {
 			margin: 25vh auto;
 			padding: 40px ${LOGIN_PADDING}px;

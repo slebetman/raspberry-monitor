@@ -64,7 +64,7 @@ const style = css`
 	.mem-detail {
 		font-size: 12px;
 	}
-	@media (max-device-width: 1024px) {
+	@media (max-device-width: 920px) {
 		.mem-label {
 			width: 50vw;
 		}
