@@ -1,6 +1,15 @@
 const component = require('express-htmx-components');
 const { html, css } = require('express-htmx-components/tags');
 const login = require('./lib/login');
+const temperature = require('./lib/temperature');
+
+async function systemMonitor () {
+	return html`
+	<div hx-get="/temperature" hx-trigger="every 1567ms">
+		$${await temperature.get.html({})}
+	</div>
+	`;
+}
 
 const main = component.get('/', async ({ session }, hx) => {
 	const user = session.user;
@@ -35,7 +44,7 @@ const main = component.get('/', async ({ session }, hx) => {
 	</div>
 
 	<div id="content">
-		$${user ? 'Hello World' : login.get.html({ session })}
+		$${user ? await systemMonitor() : login.get.html({ session })}
 	</div>
 	`;
 });
