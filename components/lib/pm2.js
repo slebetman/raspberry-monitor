@@ -1,6 +1,7 @@
 const component = require('express-htmx-components');
 const { html, css } = require('express-htmx-components/tags');
 const pm2 = require('pm2');
+const { exec } = require('child_process');
 
 function connect () {
 	return new Promise((ok,fail) => {
@@ -38,6 +39,15 @@ function stopProcess (proc) {
 	})
 }
 
+function getLogs (proc) {
+	return new Promise((ok, fail) => {
+		exec(`pm2 logs --nostream "${proc}"`, (err, stdout, stderr) => {
+			if (err) return fail(err);
+			ok(stdout + stderr);
+		})
+	})
+}
+
 const stop = component.post('/pm2/stop/:procName', async ({ procName }) => {
 	await connect();
 
@@ -48,7 +58,7 @@ const stop = component.post('/pm2/stop/:procName', async ({ procName }) => {
 	await stopProcess(procName);
 
 	return get.html({});
-})
+});
 
 const start = component.post('/pm2/restart/:procName', async ({ procName }) => {
 	await connect();
@@ -60,7 +70,37 @@ const start = component.post('/pm2/restart/:procName', async ({ procName }) => {
 	await startProcess(procName);
 
 	return get.html({});
-})
+});
+
+const logs = component.get('/pm2/logs/:procName', async ({ procName }) => {
+	await connect();
+
+	if (!procName) {
+		throw new Error('Invalid process name!');
+	}
+
+	return html`
+	<style>${style}</style>
+	<button
+		hx-get="/stats"
+		hx-target="#content"
+	>
+		<span class="material-icons-outlined">
+			arrow_back
+		</span>
+		Back
+	</button>
+	<h2>
+		<span class="material-icons-outlined">
+			notes
+		</span>
+		${procName} Logs
+	</h2>
+	<div class="pm2">
+		<pre>${await getLogs(procName)}</pre>
+	</div>
+	`
+});
 
 const get = component.get('/pm2', async ({}) => {
 	await connect();
@@ -81,7 +121,7 @@ const get = component.get('/pm2', async ({}) => {
 				pm_id: v.pm_id,
 				name: v.name,
 				mode: v.pm2_env.exec_mode.replace(/_mode$/,''),
-				timestamp: v.pm2_env.created_at,
+				uptime: v.pm2_env.pm_uptime,
 				monit: v.monit,
 				status: v.pm2_env.status,
 			}
@@ -94,16 +134,18 @@ const get = component.get('/pm2', async ({}) => {
 	<table class='pm2'>
 		<tr>
 			<th>Process</th>
-			<th>mode</th>
+			<th>Last startup time</th>
+			<th>Mode</th>
 			<th>instances</th>
 			<th>CPU</th>
 			<th>RAM</th>
-			<th>status</th>
-			<th>action</th>
+			<th>Status</th>
+			<th>Action</th>
 		</tr>
 		$${Object.values(processes).map(ps => html`
 			<tr>
 				<td>${ps.name}</td>
+				<td>${new Date(ps.uptime).toLocaleString()}</td>
 				<td>${ps.mode}</td>
 				<td>${ps.count}</td>
 				<td>${ps.monit.cpu.toFixed(1)}%</td>
@@ -127,12 +169,24 @@ const get = component.get('/pm2', async ({}) => {
 					>
 						Restart
 					</button>
+					<button
+						hx-get="/pm2/logs/${ps.name}"
+						hx-target="#content"
+					>
+						Logs
+					</button>
 					` : html`
 					<button
 						hx-post="/pm2/restart/${ps.name}"
 						hx-target="#pm2-container"
 					>
 						Start
+					</button>
+					<button
+						hx-get="/pm2/logs/${ps.name}"
+						hx-target="#content"
+					>
+						Logs
 					</button>
 					`}
 				</td>
@@ -141,9 +195,15 @@ const get = component.get('/pm2', async ({}) => {
 		).join('')}
 	</table>
 	`;
-})
+});
 
 const style = css`
+	h2 {
+		text-transform: capitalize;
+	}
+	#pm2-container {
+		flex: 1;
+	}
 	.pm2 {
 		font-family:Arial, Helvetica, sans-serif;
 	}
@@ -167,10 +227,17 @@ const style = css`
 	.pm2 button {
 		font-size: 16px;
 	}
+	.pm2 pre {
+		border: 1px solid #ccc;
+		width: 100%;
+		padding: 5px 10px;
+		text-wrap: wrap;
+	}
 `;
 
 module.exports = {
 	get,
 	stop,
 	start,
+	logs,
 }

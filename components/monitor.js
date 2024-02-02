@@ -1,35 +1,7 @@
 const component = require('express-htmx-components');
 const { html, css } = require('express-htmx-components/tags');
 const login = require('./lib/login');
-const temperature = require('./lib/temperature');
-const cpuUsage = require('./lib/cpu');
-const memUsage = require('./lib/mem');
-const pm2 = require('./lib/pm2');
-
-async function systemMonitor () {
-	return html`
-	<h2>Stats</h2>
-	<div class="section">
-		<div class="stat" hx-get="/temperature" hx-trigger="every 1523ms">
-			$${await temperature.get.html({})}
-		</div>
-		<div class="stat">
-			<div hx-get="/cpu" hx-trigger="every 2111ms">
-				$${await cpuUsage.get.html({})}
-			</div>
-			<div hx-get="/mem" hx-trigger="every 1999ms">
-				$${await memUsage.get.html({})}
-			</div>
-		</div>
-	</div>
-	<h2>Services</h2>
-	<div class="section">
-		<div id="pm2-container" hx-get="/pm2" hx-trigger="every 3637ms">
-			$${await pm2.get.html({})}
-		</div>
-	</div>
-	`;
-}
+const stats = require('./lib/stats');
 
 const main = component.get('/', async ({ session }, hx) => {
 	const user = session.user;
@@ -64,7 +36,7 @@ const main = component.get('/', async ({ session }, hx) => {
 	</div>
 
 	<div id="content">
-		$${user ? await systemMonitor() : login.get.html({ session })}
+		$${user ? await stats.get.html({}) : login.get.html({ session })}
 	</div>
 	`;
 });
@@ -77,16 +49,6 @@ const logout = component.get('/logout', async ({ session }, { redirect }) => {
 });
 
 const style = css`
-	.section {
-		display: flex;
-		flex-direction: row;
-		gap: 20px;
-	}
-
-	.section div {
-		font-family:Arial, Helvetica, sans-serif;
-	}
-
 	#header h1#title {
 		font-size: 36px;
 		margin-bottom: 0;
