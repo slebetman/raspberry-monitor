@@ -29,7 +29,7 @@ const get = component.get('/disk', async ({}) => {
 				${drive.mount}
 			</div>
 			<div class='disk-stat'>
-				${drive.used}/${drive.size}
+				${drive.available} Free
 			</div>
 			<div class='disk-percent'>
 				(${drive.percent * 100}%)
