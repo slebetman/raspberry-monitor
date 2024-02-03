@@ -15,15 +15,27 @@ const get = component.get('/stats', async ({}) => {
 		</span>
 		Stats
 	</h2>
-	<div class="section">
-		<div class="stat" hx-get="/temperature" hx-trigger="every 1523ms">
+	<div class="section" hx-ext="morphdom-swap">
+		<div class="stat"
+			hx-get="/temperature"
+			hx-trigger="every 1523ms"
+			hx-swap="morphdom"
+		>
 			$${await temperature.get.html({})}
 		</div>
 		<div class="stat">
-			<div hx-get="/cpu" hx-trigger="every 2111ms">
+			<div
+				hx-get="/cpu"
+				hx-trigger="every 2111ms"
+				hx-swap="morphdom"
+			>
 				$${await cpuUsage.get.html({})}
 			</div>
-			<div hx-get="/mem" hx-trigger="every 1999ms">
+			<div
+				hx-get="/mem"
+				hx-trigger="every 1999ms"
+				hx-swap="morphdom"
+			>
 				$${await memUsage.get.html({})}
 			</div>
 		</div>
@@ -34,8 +46,12 @@ const get = component.get('/stats', async ({}) => {
 		</span>
 		Disks
 	</h2>
-	<div class="section">
-		<div id="disk-container" hx-get="/disk" hx-trigger="every 11939ms">
+	<div class="section" hx-ext="morphdom-swap">
+		<div id="disk-container"
+			hx-get="/disk"
+			hx-trigger="every 11939ms"
+			hx-swap="morphdom"
+		>
 			$${await diskUsage.get.html({})}
 		</div>
 	</div>
@@ -45,8 +61,12 @@ const get = component.get('/stats', async ({}) => {
 		</span>
 		Services
 	</h2>
-	<div class="section">
-		<div id="pm2-container" hx-get="/pm2" hx-trigger="every 3637ms">
+	<div class="section" hx-ext="morphdom-swap">
+		<div id="pm2-container"
+			hx-get="/pm2"
+			hx-trigger="every 3637ms"
+			hx-swap="morphdom"
+		>
 			$${await pm2.get.html({})}
 		</div>
 	</div>

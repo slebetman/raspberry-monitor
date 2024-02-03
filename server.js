@@ -49,6 +49,7 @@ components.init(app, COMPONENTS_DIR, {
 	],
 	js : [
 		"https://unpkg.com/htmx.org/dist/ext/remove-me.js",
+		"https://unpkg.com/htmx.org/dist/ext/morphdom-swap.js",
 	],
 }).then(() => {
 	app.use((req, res) => {
