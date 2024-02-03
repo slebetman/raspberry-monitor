@@ -31,7 +31,9 @@ const get = component.get('/disk', async ({}) => {
 			<div class='disk-stat'>
 				${drive.used}/${drive.size}
 			</div>
-			(${drive.percent * 100}%)
+			<div class='disk-percent'>
+				(${drive.percent * 100}%)
+			</div>
 			$${diskBar(drive.percent * 100)}
 		</div>
 	`).join('')}
@@ -50,21 +52,24 @@ const style = css`
 		display: inline-block;
 		width: 100px;
 	}
-	.disk .material-icons-outlined {
+	.disk-percent {
+		display: inline-block;
+	}
+	#content .disk .material-icons-outlined {
 		vertical-align: -5px;
 	}
 	.disk .bar-container {
 		margin-left: 16px;
 	}
 	@media (max-device-width: 920px) {
-		.cpu-label {
-			width: 50vw;
+		.disk {
+			padding: 0;
 		}
-		.disk .bar-container {
-			margin: 0;
-			max-width: unset;
+		.disk-label {
 			width: 100%;
-			max-height: 12px;
+		}
+		.disk-stat {
+			margin-left: 35px;
 		}
 	}
 `;
