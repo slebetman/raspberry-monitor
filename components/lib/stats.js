@@ -3,6 +3,7 @@ const { html, css } = require('express-htmx-components/tags');
 const temperature = require('./temperature');
 const cpuUsage = require('./cpu');
 const memUsage = require('./mem');
+const diskUsage = require('./disk');
 const pm2 = require('./pm2');
 
 const get = component.get('/stats', async ({}) => {
@@ -25,6 +26,17 @@ const get = component.get('/stats', async ({}) => {
 			<div hx-get="/mem" hx-trigger="every 1999ms">
 				$${await memUsage.get.html({})}
 			</div>
+		</div>
+	</div>
+	<h2>
+		<span class="material-icons-outlined">
+			dns
+		</span>
+		Disks
+	</h2>
+	<div class="section">
+		<div id="disk-container" hx-get="/disk" hx-trigger="every 11939ms">
+			$${await diskUsage.get.html({})}
 		</div>
 	</div>
 	<h2>
@@ -54,6 +66,14 @@ const style = css`
 
 	#pm2-container {
 		flex: 1;
+	}
+
+	#disk-container {
+		width: 100%;
+	}
+
+	h2 {
+		margin-bottom: 10px;
 	}
 
 	@media (max-device-width: 920px) {

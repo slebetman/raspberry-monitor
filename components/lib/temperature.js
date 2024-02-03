@@ -17,13 +17,8 @@ async function getGPUTemperature () {
 
 function tempBar (temp) {
 	let color = '#0c6';
-
-	if (temp >= 65) {
-		color = '#ca0';
-	}
-	if (temp >= 85) {
-		color = '#c30';
-	}
+	if (temp >= 65) color = '#ca0';
+	if (temp >= 85) color = '#c30';
 
 	return bar.get.html({
 		value: temp,
