@@ -67,6 +67,21 @@ div.htmx-request .content,
 	width: 200px;
 	height: 18px;
 }
+
+.section {
+	display: flex;
+	flex-direction: row;
+	gap: 20px;
+}
+
+.section div div {
+	font-family:Arial, Helvetica, sans-serif;
+}
+
+h2 {
+	margin-bottom: 10px;
+}
+
 @keyframes spinner {
 	0% {
 		transform: rotate(0deg);
@@ -89,5 +104,10 @@ div.htmx-request .content,
 	.bar-container {
 		max-width: 32vw;
 		height: 12px;
+	}
+
+	.section {
+		flex-direction: column;
+		gap: 0;
 	}
 }

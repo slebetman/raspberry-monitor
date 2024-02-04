@@ -47,6 +47,11 @@ const post = component.post('/login', async ({ session, user, pass }, hx) => {
 	}
 });
 
+const logout = component.get('/logout', async ({ session }, hx) => {
+	delete session.user;
+	await hx.redirect('/');
+});
+
 const style = css`
 	#login {
 		margin: 20vh auto;
@@ -125,4 +130,5 @@ const style = css`
 module.exports = {
 	get,
 	post,
+	logout,
 };

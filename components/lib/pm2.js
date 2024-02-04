@@ -110,7 +110,6 @@ const get = component.get('/pm2', async ({}) => {
 			<th>Action</th>
 		</tr>
 		$${Object.values(processes).map(ps => {
-			console.log(ps);
 			return html`
 			<tr>
 				<td>${ps.name}</td>

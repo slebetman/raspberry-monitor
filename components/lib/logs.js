@@ -19,7 +19,7 @@ const logs = component.get('/pm2/logs/:procName', async ({ procName }) => {
 	return html`
 	<style>${style}</style>
 	<button
-		hx-get="/stats"
+		hx-get="/services"
 		hx-target="#content"
 	>
 		<span class="material-icons-outlined">

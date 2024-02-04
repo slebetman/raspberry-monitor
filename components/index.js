@@ -1,23 +1,13 @@
 const component = require('express-htmx-components');
 const { html, css } = require('express-htmx-components/tags');
-const login = require('./lib/login');
-const stats = require('./lib/stats');
+const stats = require('./stats');
+const services = require('./services');
+const nav = require('./lib/nav');
 
 const main = component.get('/', async ({ session }, hx) => {
 	const user = session.user;
-	let logout = '';
 	
 	hx.set('HX-Refresh', 'true');
-
-	if (user) {
-		logout = html`<a href="/logout" class="logout-btn">
-			<style>${logoutStyle}</style>
-			<span class="material-icons-outlined">
-				logout
-			</span>
-			logout
-		</a>`;
-	}
 
 	return html`
 	<style>${style}</style>
@@ -32,7 +22,7 @@ const main = component.get('/', async ({ session }, hx) => {
 				Home Server
 			</a>
 		</h1>
-		<div id="logout">$${logout}</div>
+		$${user ? nav.get.html({}) : ''}
 	</div>
 
 	<div id="content">
@@ -41,46 +31,23 @@ const main = component.get('/', async ({ session }, hx) => {
 	`;
 });
 
-
-
-const logout = component.get('/logout', async ({ session }, hx) => {
-	delete session.user;
-	await hx.redirect('/');
-});
-
 const style = css`
+	#header {
+		display: flex;
+		justify-content: space-between;
+	}
 	#header h1#title {
 		font-size: 36px;
-		margin-bottom: 0;
+		margin: 0;
 	}
 
-	#username {
-		padding: 0;
-		margin: 0;
-		margin-left: 32px;
-		font-size: 14px;
+	@media (max-device-width: 920px) {
+		#header {
+			flex-direction: column;
+		}
 	}
 `
 
-const logoutStyle = css`
-	#logout {
-		position: absolute;
-		right: 10px;
-		top: 10px;
-	}
-
-	.logout-btn {
-		text-decoration: underline;
-		color: black;
-	}
-
-	.logout-btn .material-icons-outlined {
-		vertical-align: middle;
-		font-size: 18px;
-	}
-`;
-
 module.exports = {
 	main,
-	logout,
 };
