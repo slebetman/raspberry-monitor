@@ -1,71 +1,74 @@
 const component = require('express-htmx-components');
 const { html, css } = require('express-htmx-components/tags');
-const pm2 = require('pm2');
-
-function connect () {
-	return new Promise((ok,fail) => {
-		pm2.connect((err) => {
-			if (err) return fail(err);
-			ok();
-		})
-	})
-}
-
-function listProcesses () {
-	return new Promise((ok,fail) => {
-		pm2.list((err, list) => {
-			if (err) return fail(err);
-			ok(list);
-		})
-	})
-}
-
-function startProcess (proc) {
-	return new Promise((ok,fail) => {
-		pm2.restart(proc,(err) => {
-			if (err) return fail(err);
-			ok();
-		})
-	})
-}
-
-function stopProcess (proc) {
-	return new Promise((ok,fail) => {
-		pm2.stop(proc,(err) => {
-			if (err) return fail(err);
-			ok();
-		})
-	})
-}
+const pm2 = require('../../lib/pm2');
 
 const stop = component.post('/pm2/stop/:procName', async ({ procName }) => {
-	await connect();
+	await pm2.connect();
 
 	if (!procName) {
 		throw new Error('Invalid process name!');
 	}
 
-	await stopProcess(procName);
+	await pm2.stop(procName);
 
 	return get.html({});
 });
 
 const start = component.post('/pm2/restart/:procName', async ({ procName }) => {
-	await connect();
+	await pm2.connect();
 
 	if (!procName) {
 		throw new Error('Invalid process name!');
 	}
 
-	await startProcess(procName);
+	await pm2.start(procName);
 
 	return get.html({});
 });
 
-const get = component.get('/pm2', async ({}) => {
-	await connect();
+function actionButtons (process) {
+	if (process.status === 'online' || process.status === 'cron') {
+		return html`
+		<button
+			hx-post="/pm2/stop/${process.name}"
+			hx-target="#pm2-container"
+		>
+			Stop
+		</button>
+		<button
+			hx-post="/pm2/restart/${process.name}"
+			hx-target="#pm2-container"
+		>
+			Restart
+		</button>
+		<button
+			hx-get="/pm2/logs/${process.name}"
+			hx-target="#content"
+		>
+			Logs
+		</button>
+		`
+	}
+	return html`
+	<button
+		hx-post="/pm2/restart/${process.name}"
+		hx-target="#pm2-container"
+	>
+		Start
+	</button>
+	<button
+		hx-get="/pm2/logs/${process.name}"
+		hx-target="#content"
+	>
+		Logs
+	</button>
+	`
+}
 
-	const rawList = await listProcesses();
+const get = component.get('/pm2', async ({}) => {
+	await pm2.connect();
+
+	const rawList = await pm2.list();
 	const bytes = (await import('pretty-bytes')).default;
 
 	const processes = rawList.reduce((a,v) => {
@@ -85,6 +88,10 @@ const get = component.get('/pm2', async ({}) => {
 				monit: v.monit,
 				status: v.pm2_env.status,
 			}
+
+			if (v.pm2_env.cron_restart) {
+				a[v.name].status = 'cron'
+			}
 		}
 		return a;
 	},{});
@@ -102,7 +109,9 @@ const get = component.get('/pm2', async ({}) => {
 			<th>Status</th>
 			<th>Action</th>
 		</tr>
-		$${Object.values(processes).map(ps => html`
+		$${Object.values(processes).map(ps => {
+			console.log(ps);
+			return html`
 			<tr>
 				<td>${ps.name}</td>
 				<td><span class="label">Start:</span>${new Date(ps.uptime).toLocaleString()}</td>
@@ -117,42 +126,10 @@ const get = component.get('/pm2', async ({}) => {
 					</span>
 				</td>
 				<td>
-					$${ps.status === 'online' ? html`
-					<button
-						hx-post="/pm2/stop/${ps.name}"
-						hx-target="#pm2-container"
-					>
-						Stop
-					</button>
-					<button
-						hx-post="/pm2/restart/${ps.name}"
-						hx-target="#pm2-container"
-					>
-						Restart
-					</button>
-					<button
-						hx-get="/pm2/logs/${ps.name}"
-						hx-target="#content"
-					>
-						Logs
-					</button>
-					` : html`
-					<button
-						hx-post="/pm2/restart/${ps.name}"
-						hx-target="#pm2-container"
-					>
-						Start
-					</button>
-					<button
-						hx-get="/pm2/logs/${ps.name}"
-						hx-target="#content"
-					>
-						Logs
-					</button>
-					`}
+					$${actionButtons(ps)}
 				</td>
 			</tr>
-			`
+			`}
 		).join('')}
 	</table>
 	`;
@@ -173,7 +150,7 @@ const style = css`
 		font-weight: bolder;
 		text-transform: uppercase;
 	}
-	.pm2 span.online, .pm2 span.launching {
+	.pm2 span.online, .pm2 span.launching, .pm2 span.cron {
 		color: #0a3;
 	}
 	.pm2 span.stopping, .pm2 span.stopped {
