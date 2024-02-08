@@ -135,9 +135,6 @@ const get = component.get('/pm2', async ({}) => {
 });
 
 const style = css`
-	h2 {
-		text-transform: capitalize;
-	}
 	.pm2 {
 		font-family:Arial, Helvetica, sans-serif;
 	}
