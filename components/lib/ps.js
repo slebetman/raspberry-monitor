@@ -24,10 +24,10 @@ const get = component.get('/ps', async ({ all }) => html`
 		</tr>
 		$${(await ps(all)).map(p => html`
 			<tr>
-				<td>${p.user}</td>
-				<td class="pid">${p.pid}</td>
-				<td class="cpu">${p.cpu}</td>
-				<td>${p.ram}</td>
+				<td><span class="label">User: </span>${p.user}</td>
+				<td class="pid"><span class="label">PID: </span>${p.pid}</td>
+				<td class="cpu"><span class="label">CPU: </span>${p.cpu}</td>
+				<td><span class="label">RAM: </span>${p.ram}</td>
 				<td>${p.cmd}</td>
 			</tr>
 		`).join('')}
@@ -55,6 +55,40 @@ const style = css`
 		text-indent: -20px;
 		padding-left: 38px;
 		word-break: break-all;
+	}
+	.ps .label {
+		display: none;
+	}
+	@media (max-device-width: 920px) {
+		.ps {
+			width: 100%;
+		}
+		.ps .label {
+			display: block;
+		}
+		.ps tr:first-child {
+			display: none;
+		}
+		.ps tr {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap-reverse;
+			gap: 10px;
+			border-top: 1px solid #000;
+			padding: 5px 0;
+		}
+		.ps td {
+			vertical-align: top;
+			padding: 1px;
+			border: none;
+		}
+		.ps td:first-child {
+			padding-left: 20px;
+		}
+		.ps td:last-child {
+			width: 100%;
+			padding-left: 20px;
+		}
 	}
 `
 

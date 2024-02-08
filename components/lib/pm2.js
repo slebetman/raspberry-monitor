@@ -166,8 +166,11 @@ const style = css`
 		.pm2 {
 			width: 100%;
 		}
-		.pm2 th {
+		.pm2 tr:first-child {
 			display: none;
+		}
+		.pm2 tr {
+			border-top: 1px solid #000;
 		}
 		.pm2 td {
 			vertical-align: top;
@@ -184,8 +187,12 @@ const style = css`
 		.pm2 td + td {
 			display: block;
 		}
+		.pm2 td:first-child,
+		.pm2 td:first-child + td {
+			padding-top: 5px;
+		}
 		.pm2 td:last-child {
-			padding-bottom: 20px;
+			padding-bottom: 10px;
 		}
 		.pm2 .detail {
 			display: none;

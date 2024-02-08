@@ -16,15 +16,18 @@ const get = component.get('/task-manager', async ({}) => {
 			hx-get="/ps"
 			hx-trigger="every 3637ms"
 		>
-			$${await ps.get.html({})}
+			$${await ps.get.html({ all: false })}
 		</div>
 	</div>
 	`;
 })
 
 const style = css`
-	#ps-container {
-		flex: 1;
+	@media (max-device-width: 920px) {
+		#ps-container {
+			height: calc(100vh - 130px);
+			overflow: scroll;
+		}
 	}
 `
 

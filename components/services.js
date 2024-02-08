@@ -23,8 +23,11 @@ const get = component.get('/services', async ({}) => {
 })
 
 const style = css`
-	#pm2-container {
-		flex: 1;
+	@media (max-device-width: 920px) {
+		#pm2-container {
+			height: calc(100vh - 130px);
+			overflow: scroll;
+		}
 	}
 `
 
