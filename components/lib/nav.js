@@ -21,9 +21,16 @@ function link (label, icon, url, checked) {
 const get = component.get('/nav', ({}) => {
 	return html`
 	<style>$${style}</style>
-	<nav>
+	<input type="checkbox" id="nav-toggle">
+	<label for="nav-toggle" id="nav-burger">
+		<span class="material-icons-outlined">
+			menu
+		</span>
+	</label>
+	<nav  onclick="document.querySelector('#nav-toggle').checked = false">
 		$${link('Stats', 'show_chart', '/stats', true)}
 		$${link('Services', 'miscellaneous_services', '/services')}
+		$${link('Task Manager', 'poll', '/task-manager')}
 		<a href="/logout" class="logout-btn">
 			<span class="material-icons-outlined">
 				logout
@@ -35,6 +42,13 @@ const get = component.get('/nav', ({}) => {
 });
 
 const style = css`
+	#nav-toggle,
+	#nav-burger {
+		display: none;
+	}
+	#nav-burger span.material-icons-outlined {
+		font-size: 32px;
+	}
 	nav {
 		display: flex;
 		gap: 40px;
@@ -64,12 +78,34 @@ const style = css`
 	}
 
 	@media (max-device-width: 920px) {
+		#nav-burger {
+			display: block;
+			position: absolute;
+			top: 20px;
+			right: 15px;
+			justify-self: end;
+		}
+		#nav-toggle + label + nav {
+			display: none;
+		}
+		#nav-toggle:checked + label + nav {
+			display: flex;
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: fit-content;
+			flex-direction: column;
+			background: #fff;
+			border: 1px solid #ccc;
+			padding: 20px;
+			box-shadow: #999 0 0 15px;
+		}
 		nav {
 			gap: 20px;
 		}
 		.logout-btn {
-			flex-grow: 1;
-			text-align: end;
+			border-top: 1px solid #ccc;
+			padding-top: 20px;
 		}
 	}
 `;
