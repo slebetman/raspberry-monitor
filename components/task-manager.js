@@ -25,7 +25,7 @@ const get = component.get('/task-manager', async ({}) => {
 const style = css`
 	@media (max-device-width: 920px) {
 		#ps-container {
-			height: calc(100vh - 130px);
+			height: calc(100vh - 230px);
 			overflow: scroll;
 		}
 	}

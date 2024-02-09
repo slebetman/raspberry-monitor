@@ -25,7 +25,7 @@ const get = component.get('/services', async ({}) => {
 const style = css`
 	@media (max-device-width: 920px) {
 		#pm2-container {
-			height: calc(100vh - 130px);
+			height: calc(100vh - 230px);
 			overflow: scroll;
 		}
 	}
