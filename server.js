@@ -50,6 +50,7 @@ components.init(app, COMPONENTS_DIR, {
 	js : [
 		"https://unpkg.com/htmx.org/dist/ext/remove-me.js",
 	],
+	favicon: '/static/home24.png'
 }).then(() => {
 	app.use((req, res) => {
 		console.log('404: Not Found');
