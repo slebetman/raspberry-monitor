@@ -44,8 +44,8 @@ div.htmx-request .content,
     height: 200px;
 }
 .full-spinner {
-    width: calc(100% - 120px);
-    height: calc(100vh - 200px);
+    width: calc(100% - 100px);
+    height: calc(100vh - 250px);
 }
 .htmx-request .sticky-spinner,
 .htmx-request .full-spinner {
@@ -61,11 +61,18 @@ div.htmx-request .content,
 	border-radius: 50%;
 	border: 6px solid #333;
 	border-color: #333 transparent #333 transparent;
-	animation: spinner 1.2s linear infinite;
+	animation: spinner 1.2s linear infinite, pause 300ms linear;
 }
 .bar-container {
 	width: 200px;
 	height: 18px;
+}
+
+.htmx-request .section,
+.htmx-request h2,
+.htmx-request form {
+	opacity: 0;
+	animation: pauseout 300ms linear;
 }
 
 .section {
@@ -90,8 +97,35 @@ h2 {
 		transform: rotate(360deg);
 	}
 }
+@keyframes pause {
+	0% {
+		opacity: 0;
+	}
+	99% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+@keyframes pauseout {
+	0% {
+		opacity: 1;
+	}
+	99% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
 
 @media (max-device-width: 920px) {
+	.full-spinner {
+		width: calc(100% - 10px);
+		height: calc(100vh - 250px);
+	}
+
 	button,
 	input {
 		font-size: 16px;

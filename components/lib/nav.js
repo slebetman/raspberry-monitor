@@ -9,6 +9,7 @@ function link (label, icon, url, checked) {
 			<input id="nav-${id}" type="radio" name="nav" ${checked ? 'checked' : ''}
 				hx-get="${url}"
 				hx-target="#content"
+				hx-indicator="body"
 			>
 			<span class="material-icons-outlined">
 				${icon}

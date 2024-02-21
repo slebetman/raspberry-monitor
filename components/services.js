@@ -5,6 +5,7 @@ const pm2 = require('./lib/pm2');
 const get = component.get('/services', async ({}) => {
 	return html`
 	<style>${style}</style>
+	<div class="full-spinner"></div>
 	<h2>
 		<span class="material-icons-outlined">
 			miscellaneous_services

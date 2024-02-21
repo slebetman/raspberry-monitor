@@ -8,6 +8,7 @@ const diskUsage = require('./lib/disk');
 const get = component.get('/stats', async ({}) => {
 	return html`
 	<style>${style}</style>
+	<div class="full-spinner"></div>
 	<h2>
 		<span class="material-icons-outlined">
 			show_chart

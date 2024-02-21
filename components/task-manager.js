@@ -5,6 +5,7 @@ const ps = require('./lib/ps');
 const get = component.get('/task-manager', async ({ all }) => {
 	return html`
 	<style>${style}</style>
+	<div class="full-spinner"></div>
 	<h2>
 		<span class="material-icons-outlined">
 			poll
