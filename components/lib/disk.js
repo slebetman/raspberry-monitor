@@ -32,7 +32,7 @@ const get = component.get('/disk', async ({}) => {
 				${drive.available} free
 			</div>
 			<div class='disk-percent'>
-				(${(drive.percent * 100).toFixed(2)}%)
+				(${(drive.percent * 100).toFixed(1)}%)
 			</div>
 			$${diskBar(drive.percent * 100)}
 		</div>
